@@ -3,6 +3,9 @@
 #include <conio.h>
 #include <string.h>
 
+void dia_semana(){
+	printf(" PRODUTO          DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
+}
 int main(){
 
 
@@ -10,16 +13,16 @@ int main(){
   char Linha[100];
   char *result;
   int produto_dia[10][7];
-  char nome_produto[11][20] = {"Farinha",
-                               "Arroz",
-                               "Feijao",
-                               "Frango",
-                               "Carne",
-                               "Sabonete",
-                               "Escova",
-                               "Pasta",
-                               "Shampoo",
-                               "Condicionador"
+  char nome_produto[10][20] = {"Farinha       : ",
+                               "Arroz         : ",
+                               "Feijao        : ",
+                               "Frango        : ",
+                               "Carne         : ",
+                               "Sabonete      : ",
+                               "Escova        : ",
+                               "Pasta         : ",
+                               "Shampoo       : ",
+                               "Condicionador : "
                               };
   float preco_produto[10];
   int i,j = 0, produto = 0, dia = 0, linha_preco =0 ;
@@ -33,9 +36,8 @@ int main(){
 
   i = 1;
 
-  printf("\n%s", nome_produto[0]);
+
   while (!feof(arq)){
-  printf("\n%s", nome_produto[0]);
       // LÊ UMA LINHA (INCLUSIVE COM O '\N')
       result = fgets(Linha, 100, arq);  // O 'FGETS' LÊ ATÉ 99 CARACTÉRES OU ATÉ O '\N']
 
@@ -51,30 +53,30 @@ int main(){
             dia=0;
             produto++;
           }
-          if(i>70){
-            preco_produto[linha_preco]=atoi(Linha);
+          if(i>71){
+          	printf("%s",Linha);
+            preco_produto[linha_preco]=atof(Linha);
             linha_preco++;
           }
       }
   }
-
-  printf("\n%s", nome_produto[0]);
+	
+  dia_semana();
   for( produto = 0; produto < 10 ; produto++){
-    printf("\n");
+    printf("     \n %s", nome_produto[produto]);
     for( dia = 0; dia < 7 ; dia++){
-        printf("%i  ",produto_dia[produto][dia]);
+        printf("  %i  ",produto_dia[produto][dia]);
     }
   }
-
-  for(j=0; j<11; j++){
-        printf("\n%s", nome_produto[j]);
+  
+  printf("\n\n");
+  for(j=0; j<10; j++){
+        printf("\n%s  %.2f", nome_produto[j],preco_produto[j]);
   }
 
 
-
-  printf("\n%s", nome_produto[0]);
+  printf("\n%f", preco_produto[2]);
   fclose(arq);
 
-    getchar();
 	return 0;
 }
