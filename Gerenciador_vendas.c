@@ -3,15 +3,48 @@
 #include <conio.h>
 #include <string.h>
 
+//VARIÁVEIS GLOBAIS 
+int produto_dia[10][7];
+float preco_produto[10];
+char nome_produto[10][20] = {"Farinha       : ",
+                           "Arroz         : ",
+                           "Feijao        : ",
+                           "Frango        : ",
+                           "Carne         : ",
+                           "Sabonete      : ",
+                           "Escova        : ",
+                           "Pasta         : ",
+                           "Shampoo       : ",
+                           "Condicionador : "
+                          };
+int i,j = 0, produto = 0, dia = 0, linha_preco =0;
+
+
 void dia_semana(){
 	printf(" PRODUTO          DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
 }
+
+void exibe_vendas(/*int j, int dia,int produto, float preco_produto[10], char nome_produto[10][20], int produto_dia[10][7]*/void){
+	for( produto = 0; produto < 10 ; produto++){
+		printf("     \n %s", nome_produto[produto]);
+		for( dia = 0; dia < 7 ; dia++){
+	    	printf("  %i  ",produto_dia[produto][dia]);
+		}
+	}
+	
+	printf("\n\n");
+	for(j=0; j<10; j++){
+	    printf("\n%s  %.2f", nome_produto[j],preco_produto[j]);
+	}
+	
+}
+
 int main(){
 	
 	FILE *arq, *arq1;
 	char Linha[100];
 	char *result;
-	int produto_dia[10][7];
+	/*int produto_dia[10][7];
 	float preco_produto[10];
 	char nome_produto[10][20] = {"Farinha       : ",
 	                           "Arroz         : ",
@@ -24,7 +57,7 @@ int main(){
 	                           "Shampoo       : ",
 	                           "Condicionador : "
 	                          };
-	int i,j = 0, produto = 0, dia = 0, linha_preco =0 ;
+	int i,j = 0, produto = 0, dia = 0, linha_preco =0;*/
 	arq = fopen("Entrada.txt", "rt");             // LEITURA
 	arq1 = fopen("Relatorio (saida).txt", "wt");  // GRAVAÇÃO
 	
@@ -68,7 +101,8 @@ int main(){
 	}
 	
 	dia_semana();
-	for( produto = 0; produto < 10 ; produto++){
+	exibe_vendas(/*j, dia,produto, preco_produto[10], nome_produto[10][20], produto_dia[10][7]*/);
+	/*for( produto = 0; produto < 10 ; produto++){
 		printf("     \n %s", nome_produto[produto]);
 		for( dia = 0; dia < 7 ; dia++){
 	    	printf("  %i  ",produto_dia[produto][dia]);
@@ -78,7 +112,7 @@ int main(){
 	printf("\n\n");
 	for(j=0; j<10; j++){
 	    printf("\n%s  %.2f", nome_produto[j],preco_produto[j]);
-	}
+	}*/
 	
 	fclose(arq);
 	
