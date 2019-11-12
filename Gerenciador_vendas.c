@@ -32,13 +32,14 @@ int i,j = 0, produto = 0, dia = 0, linha_preco =0;
 
 
 //FUNÇÕES
-void dia_semana(void){
+void dia_semana(FILE *arq1){
 
-	printf("                  DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
+printf("                  DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
+fprintf(arq1,"                  DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
 
 }
 
-void menu(){
+void menu(FILE *arq1){
 
     printf("\n\nESCOLHA UMA OPÇÃO :");
     printf("\n1 - EXIBIR A TABELA DE VENDAS");
@@ -53,23 +54,27 @@ void menu(){
     switch (entrada_menu){
         case 1:
             system("cls");
-            exibe_vendas();
+            exibe_vendas(arq1);
             break;
         case 2:
             system("cls");
-            exibe_dados_dia();
+            exibe_dados_dia(arq1);
             break;
         case 3:
             system("cls");
-            exibe_dados_produto();
+            exibe_dados_produto(arq1);
             break;
         case 4:
             system("cls");
-            exibe_preco();
+            exibe_preco(arq1);
             break;
         case 5:
             system("cls");
-            corrije_dado();
+            corrije_dado(arq1);
+            break;
+        case 6:
+        system("cls");
+            gera_relatorio(arq1);
             break;
 }
 
@@ -121,7 +126,7 @@ void corrije_dado(){
 
 }
 
-void exibe_dados_dia(){
+void calculo_exibe_dados_dia(){
     //UNIDADE
     for(i = 0; i<7; i++){
             for(j=0; j<10; j++){
@@ -129,12 +134,16 @@ void exibe_dados_dia(){
             }
     }
 
-	//VALOR
-	for(i = 0; i<7; i++){
+    //VALOR
+    for(i = 0; i<7; i++){
         for(j=0; j<10; j++){
             soma_produto_valor[i]=soma_produto_valor[i]+(produto_dia[j][i]*preco_produto[j]);
         }
     }
+}
+
+void exibe_dados_dia(){
+    calculo_exibe_dados_dia();
 
     printf("\nQUAL O DIA QUE VOCE DESEJA VER AS VENDAS ?  ");
     printf("\n1 - DOMINGO");
@@ -169,7 +178,7 @@ void exibe_dados_dia(){
     }
 }
 
-void exibe_dados_produto(void){
+void calculo_exibe_dados_produto(){
     //UNIDADE
     for(i = 0; i<10; i++){
         for(j = 0; j<7; j++){
@@ -181,8 +190,11 @@ void exibe_dados_produto(void){
     for(i = 0; i<10; i++){
         total_venda_produto_valor[i]=total_venda_produto_unidade[i]*preco_produto[i];
         total_venda_de_todos_valor+=total_venda_produto_valor[i];
-
     }
+}
+
+void exibe_dados_produto(FILE *arq1){
+    calculo_exibe_dados_produto();
 
     printf("\nQUAL O PRODUTO QUE VOCE DESEJA VER AS VENDAS ?  ");
     printf("\n1 - FARINHA");
@@ -200,10 +212,7 @@ void exibe_dados_produto(void){
     scanf("%i",&produto_exibir);
 
     if(produto_exibir>0 || produto_exibir<11){
-
-        //printf("\nTOTAL DE VENDAS POR PRODUTO (EM UNIDADE)\n");
         printf("\n%s %i UNIDADES",nome_produto[produto_exibir-1],total_venda_produto_unidade[produto_exibir-1]);
-        //printf("\nTOTAL DE VENDAS POR PRODUTO (EM REAIS)\n");
         printf("\n%s %.2f REAIS",nome_produto[produto_exibir-1],total_venda_produto_valor[produto_exibir-1]);
 
     }
@@ -218,85 +227,129 @@ void exibe_dados_produto(void){
         printf("\nTOTAL DE VENDAS POR PRODUTO (EM REAIS)\n");
         for(i = 0; i<10; i++){
             printf("\n%s %.2f",nome_produto[i],total_venda_produto_valor[i]);
+            fprintf(arq1,"\n%s %.2f",nome_produto[i],total_venda_produto_valor[i]);
         }
     }
 }
-void exibe_produto_semana(){
+void exibe_produto_semana(FILE *arq1){
     printf("\nTOTAL DAS VENDAS (EM UNIDADE): %i",total_venda_de_todos_unidade);
     printf("\nTOTAL DAS VENDAS (EM UNIDADE): %.2f",total_venda_de_todos_valor);
 
 }
 
-void gera_relatorio(){
+void gera_relatorio(FILE *arq1){
+    printf("....RELATÓRIO CRIADO");
+    fprintf(arq1,"TABELA DE VENDAS\n");
+    fprintf(arq1,"                  DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
+    //EXIBE VENDAS
+    for( produto = 0; produto < 10 ; produto++){
+        fprintf(arq1,"     \n %s", nome_produto[produto]);
+        for( dia = 0; dia < 7 ; dia++){
+            fprintf(arq1,"  %i  ",produto_dia[produto][dia]);
+        }
+    }
+    //EXIBIR DADOS DIAS
+    calculo_exibe_dados_dia();
+    //UNIDADE
+    fprintf(arq1,"\n\n\nTOTAL DE VENDAS POR DIA (EM UNIDADE)\n\n");
+    fprintf(arq1,"DOMINGO  SEGUNDA  TERCA  QUARTA  QUINTA  SEXTA  SABADO\n");
+    for(i = 0; i<7; i++){
+        fprintf(arq1,"  %i    ",soma_produto_unidade[i]);
+    }
+    //VALOR
+    fprintf(arq1,"\n\n\nTOTAL DE VENDAS POR DIA (EM REAIS))\n\n");
+    fprintf(arq1,"DOMINGO   SEGUNDA    TERCA     QUARTA     QUINTA      SEXTA     SABADO\n");
+    for(i = 0; i<7; i++){
+        fprintf(arq1,"%.2f     ",soma_produto_valor[i]);
+    }
+
+    //EXIBIR DADOS PRODUTOS
+    calculo_exibe_dados_produto();
+    //UNIDADE
+    fprintf(arq1,"\n\nTOTAL DE VENDAS POR PRODUTO (EM UNIDADE)\n");
+    for(i = 0; i<10; i++){
+        fprintf(arq1,"\n%s %i",nome_produto[i],total_venda_produto_unidade[i]);
+    }
+    //VALOR
+    fprintf(arq1,"\n\nTOTAL DE VENDAS POR PRODUTO (EM REAIS)\n");
+    for(i = 0; i<10; i++){
+        fprintf(arq1,"\n%s %.2f",nome_produto[i],total_venda_produto_valor[i]);
+    }
+
+    //INFORMAÇÕES SEMANA
+    fprintf(arq1,"\n\nTOTAL DAS VENDAS (EM UNIDADE): %i",total_venda_de_todos_unidade);
+    fprintf(arq1,"\nTOTAL DAS VENDAS (EM REAIS): %.2f",total_venda_de_todos_valor);
+
+
 }
 
-void exibe_vendas(void){
-    dia_semana();
-	for( produto = 0; produto < 10 ; produto++){
-		printf("     \n %s", nome_produto[produto]);
-		for( dia = 0; dia < 7 ; dia++){
-	    	printf("  %i  ",produto_dia[produto][dia]);
-		}
-	}
+void exibe_vendas(FILE *arq1){
+    printf("                  DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
+    for( produto = 0; produto < 10 ; produto++){
+        printf("     \n %s", nome_produto[produto]);
+        for( dia = 0; dia < 7 ; dia++){
+            printf("  %i  ",produto_dia[produto][dia]);
+        }
+    }
 }
 
 void exibe_preco(void){
-	printf("\n\n");
-	for(j=0; j<10; j++){
-	    printf("\n%s  %.2f", nome_produto[j],preco_produto[j]);
-	}
+    printf("\n\n");
+    for(j=0; j<10; j++){
+       printf("\n%s  %.2f", nome_produto[j],preco_produto[j]);
+    }
 
 }
 
 int main(){
 
-    //setlocale(LC_ALL, "Portuguese");
-	FILE *arq, *arq1;
-	char Linha[100];
-	char *result;
-	arq = fopen("Entrada.txt", "rt");             // LEITURA
-	arq1 = fopen("Relatorio (saida).txt", "wt");  // GRAVAÇÃO
+    setlocale(LC_ALL, "Portuguese");
+FILE *arq, *arq1;
+char Linha[100];
+char *result;
+arq = fopen("Entrada.txt", "rt");             // LEITURA
+arq1 = fopen("Relatorio (saida).txt", "wt");  // GRAVAÇÃO
 
-	if (arq == NULL){
+if (arq == NULL){
         // ERRO NA ABERTURA
-	    printf("Problemas na abertura do arquivo\n");
-	    return;
-	}
+   printf("Problemas na abertura do arquivo\n");
+   return;
+}
 
-	i = 1;
+i = 1;
 
 
-	while (!feof(arq)){
-	  	// LÊ UMA LINHA (INCLUSIVE COM O '\N')
-	    // O 'FGETS' LÊ ATÉ 99 CARACTÉRES OU ATÉ O '\N']
+while (!feof(arq)){
+  // LÊ UMA LINHA (INCLUSIVE COM O '\N')
+   // O 'FGETS' LÊ ATÉ 99 CARACTÉRES OU ATÉ O '\N']
 
-	  	if (result){  // SE FOI POSSÍVEL LER
-	  		result = fgets(Linha, 100, arq);
-	      	//printf("Linha %d : %s",i,Linha);
-	      	result = fprintf(arq1,"Linha %d\n",i);
-	      	produto_dia[produto][dia] = atoi(Linha); //Str pra Int
+  if (result){  // SE FOI POSSÍVEL LER
+  result = fgets(Linha, 100, arq);
+      //printf("Linha %d : %s",i,Linha);
+      //result = fprintf(arq1,"Linha %d\n",i);
+      produto_dia[produto][dia] = atoi(Linha); //Str pra Int
 
-	      	i++;
-	      	dia++;
+      i++;
+      dia++;
 
-	      	if(dia>6){
-	        	dia=0;
-	        	produto++;
-	      	}
-	      	if(i>70){
-	      		fscanf(arq,"%s",&Linha);
-	        	preco_produto[linha_preco]=atof(Linha); //Str pra Float
-	        	linha_preco++;
-	      	}
-	    }
-	}
+      if(dia>6){
+        dia=0;
+        produto++;
+      }
+      if(i>70){
+      fscanf(arq,"%s",&Linha);
+        preco_produto[linha_preco]=atof(Linha); //Str pra Float
+        linha_preco++;
+      }
+   }
+}
 
-    while(entrada_menu!=6){
-        menu();
+    while(entrada_menu!=7){
+        menu(arq1);
 
     }
 
-	fclose(arq);
+fclose(arq);
 
-	return 0;
+return 0;
 }
