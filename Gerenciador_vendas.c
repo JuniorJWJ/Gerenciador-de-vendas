@@ -2,13 +2,14 @@
 #include <stdlib.h>
 #include <conio.h>
 #include <string.h>
-#include <locale.h> //necessário para usar setlocale
+#include <locale.h>
 
 
 //VARIÁVEIS GLOBAIS
 int produto_dia[10][7], soma_produto_unidade[10], total_venda_produto_unidade[10], total_venda_de_todos_unidade, entrada_menu;
-int escolha_produto, altera_opcao, dia_alterar, dia_exibir,produto_exibir,maior_quantidade_produto;
+int escolha_produto, altera_opcao, dia_alterar, dia_exibir,produto_exibir,maior_quantidade_produto_unidade,menor_quantidade_produto_unidade;
 float preco_produto[10], soma_produto_valor[10], total_venda_produto_valor[10], total_venda_de_todos_valor;
+float maior_quantidade_produto_valor,menor_quantidade_produto_valor;
 char produtos_mais_vendidos[100], produtos_mais_vendidos_valor[100];
 char nome_produto[10][20]={"FARINHA       : ",
                            "ARROZ         : ",
@@ -19,6 +20,17 @@ char nome_produto[10][20]={"FARINHA       : ",
                            "ESCOVA        : ",
                            "PASTA         : ",
                            "SHAMPOO       : ",
+                           "CONDICIONADOR : "
+                          };
+char nome_produto1[10][20]={"FARINHA ",
+                           "ARROZ ",
+                           "FEIJÃO ",
+                           "FRANGO ",
+                           "CARNE ",
+                           "SABONETE ",
+                           "ESCOVA ",
+                           "PASTA ",
+                           "SHAMPOO ",
                            "CONDICIONADOR : "
                           };
 char matriz_dia_semana[8][20] = {"DOMINGO",
@@ -74,7 +86,7 @@ void menu(FILE *arq1){
             corrije_dado(arq1);
             break;
         case 6:
-        system("cls");
+            system("cls");
             gera_relatorio(arq1);
             break;
 }
@@ -236,6 +248,7 @@ void exibe_dados_produto(FILE *arq1){
         }
     }
 }
+
 void exibe_produto_semana(FILE *arq1){
     printf("\nTOTAL DAS VENDAS (EM UNIDADE): %i",total_venda_de_todos_unidade);
     printf("\nTOTAL DAS VENDAS (EM UNIDADE): %.2f",total_venda_de_todos_valor);
@@ -243,21 +256,83 @@ void exibe_produto_semana(FILE *arq1){
 
 void calcular_mais_vendido(){
     //MAIS VENDIDO UNIDADE
-    maior_quantidade_produto=total_venda_produto_unidade[0];
-    for(i = 10; i<10; i++){
-        if(total_venda_produto_unidade[i]>maior_quantidade_produto){
-            printf("%i",total_venda_produto_unidade[i]);
-            maior_quantidade_produto=total_venda_produto_unidade[i];
-        }
-    }
-    //CONCATENANDO NA STRING
-    for(i = 10; i<10; i++){
-        if(total_venda_produto_unidade[i]==maior_quantidade_produto){
-            strcat(produtos_mais_vendidos, nome_produto[i]);
+    maior_quantidade_produto_unidade=total_venda_produto_unidade[0];
+    for(i = 0; i<10; i++){
+        if(total_venda_produto_unidade[i]>maior_quantidade_produto_unidade){
+            maior_quantidade_produto_unidade=total_venda_produto_unidade[i];
         }
     }
 
+    //MAIS VENDIDO VALOR
+    maior_quantidade_produto_valor=total_venda_produto_valor[0];
+    for(i = 0; i<10; i++){
+        if(total_venda_produto_valor[i]>maior_quantidade_produto_valor){
+            maior_quantidade_produto_valor=total_venda_produto_valor[i];
+        }
+    }
 
+}
+
+void calcular_menor_vendido(){
+    //MAIS VENDIDO UNIDADE
+    menor_quantidade_produto_unidade=total_venda_produto_unidade[0];
+    for(i = 0; i<10; i++){
+        if(total_venda_produto_unidade[i]<menor_quantidade_produto_unidade){
+            menor_quantidade_produto_unidade=total_venda_produto_unidade[i];
+        }
+    }
+
+    //MAIS VENDIDO VALOR
+    menor_quantidade_produto_valor=total_venda_produto_valor[0];
+    for(i = 0; i<10; i++){
+        if(total_venda_produto_valor[i]<menor_quantidade_produto_valor){
+            menor_quantidade_produto_valor=total_venda_produto_valor[i];
+        }
+    }
+
+}
+
+void exibe_comparacao_maior_unidade(FILE *arq1){
+    //MAIOR UNIDADE
+    for(i = 0; i<10; i++){
+        if(total_venda_produto_unidade[i]==maior_quantidade_produto_unidade){
+            fprintf(arq1,"  %s - ",nome_produto1[i]);
+            fprintf(arq1,"%i",maior_quantidade_produto_unidade);
+        }
+    }
+
+}
+
+void exibe_comparacao_maior_valor(FILE *arq1){
+    //MAIOR VALOR
+    for(i = 0; i<10; i++){
+        if(total_venda_produto_valor[i]==maior_quantidade_produto_valor){
+            fprintf(arq1,"  %s  ",nome_produto1[i]);
+            fprintf(arq1,"%.2f",maior_quantidade_produto_valor);
+        }
+    }
+}
+
+void exibe_comparacao_menor_unidade(FILE *arq1){
+    //MAIOR UNIDADE
+    for(i = 0; i<10; i++){
+        if(total_venda_produto_unidade[i]==menor_quantidade_produto_unidade){
+                printf("%i",menor_quantidade_produto_unidade);
+            fprintf(arq1,"  %s - ",nome_produto1[i]);
+            fprintf(arq1,"%i",menor_quantidade_produto_unidade);
+        }
+    }
+
+}
+
+void exibe_comparacao_menor_valor(FILE *arq1){
+    //MAIOR VALOR
+    for(i = 0; i<10; i++){
+        if(total_venda_produto_valor[i]==menor_quantidade_produto_valor){
+            fprintf(arq1,"  %s  ",nome_produto1[i]);
+            fprintf(arq1,"%.2f",menor_quantidade_produto_valor);
+        }
+    }
 }
 
 void gera_relatorio(FILE *arq1){
@@ -304,21 +379,28 @@ void gera_relatorio(FILE *arq1){
     fprintf(arq1,"\nTOTAL DAS VENDAS (EM REAIS): %.2f",total_venda_de_todos_valor);
 
     calcular_mais_vendido();
-    fprintf(arq1,"\n%s %i",produtos_mais_vendidos,maior_quantidade_produto);
+    fprintf(arq1,"\nPRODUTO QUE MAIS VENDEU (EM UNIDADE): ");
+    exibe_comparacao_maior_unidade(arq1);
+    fprintf(arq1,"\nPRODUTO QUE MAIS VENDEU (EM REAIS): ");
+    exibe_comparacao_maior_valor(arq1);
+
+    calcular_menor_vendido();
+    fprintf(arq1,"\nPRODUTO QUE MENOS VENDEU (EM UNIDADE): ");
+    exibe_comparacao_menor_unidade(arq1);
+    fprintf(arq1,"\nPRODUTO QUE MENOS VENDEU (EM REAIS): ");
+    exibe_comparacao_menor_valor(arq1);
 }
 
 
 
 void exibe_vendas(FILE *arq1){
     dia_semana(arq1);
-for( produto = 0; produto < 10 ; produto++){
-printf("     \n %s", nome_produto[produto]);
-fprintf(arq1,"     \n %s", nome_produto[produto]);
-for( dia = 0; dia < 7 ; dia++){
-   	printf("  %i  ",produto_dia[produto][dia]);
-   	fprintf(arq1,"  %i  ",produto_dia[produto][dia]);
-}
-}
+    for( produto = 0; produto < 10 ; produto++){
+        printf("     \n %s", nome_produto[produto]);
+        for( dia = 0; dia < 7 ; dia++){
+            printf("  %i  ",produto_dia[produto][dia]);
+        }
+    }
 }
 
 void exibe_preco(void){
