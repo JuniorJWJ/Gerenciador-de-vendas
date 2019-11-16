@@ -7,8 +7,9 @@
 
 //VARIÁVEIS GLOBAIS
 int produto_dia[10][7], soma_produto_unidade[10], total_venda_produto_unidade[10], total_venda_de_todos_unidade, entrada_menu;
-int escolha_produto, altera_opcao, dia_alterar, dia_exibir,produto_exibir;
+int escolha_produto, altera_opcao, dia_alterar, dia_exibir,produto_exibir,maior_quantidade_produto;
 float preco_produto[10], soma_produto_valor[10], total_venda_produto_valor[10], total_venda_de_todos_valor;
+char produtos_mais_vendidos[100], produtos_mais_vendidos_valor[100];
 char nome_produto[10][20]={"FARINHA       : ",
                            "ARROZ         : ",
                            "FEIJÃO        : ",
@@ -126,23 +127,7 @@ void corrije_dado(){
 
 }
 
-void calculo_exibe_dados_dia(){
-    //UNIDADE
-    for(i = 0; i<7; i++){
-            for(j=0; j<10; j++){
-                soma_produto_unidade[i]+=produto_dia[j][i];
-            }
-    }
-
-    //VALOR
-    for(i = 0; i<7; i++){
-        for(j=0; j<10; j++){
-            soma_produto_valor[i]=soma_produto_valor[i]+(produto_dia[j][i]*preco_produto[j]);
-        }
-    }
-}
-
-void exibe_dados_dia(){
+void exibe_dados_dia(FILE *arq1){
     calculo_exibe_dados_dia();
 
     printf("\nQUAL O DIA QUE VOCE DESEJA VER AS VENDAS ?  ");
@@ -193,8 +178,25 @@ void calculo_exibe_dados_produto(){
     }
 }
 
+void calculo_exibe_dados_dia(){
+    //UNIDADE
+    for(i = 0; i<7; i++){
+            for(j=0; j<10; j++){
+                soma_produto_unidade[i]+=produto_dia[j][i];
+            }
+    }
+
+    //VALOR
+    for(i = 0; i<7; i++){
+        for(j=0; j<10; j++){
+            soma_produto_valor[i]=soma_produto_valor[i]+(produto_dia[j][i]*preco_produto[j]);
+        }
+    }
+}
+
 void exibe_dados_produto(FILE *arq1){
     calculo_exibe_dados_produto();
+
 
     printf("\nQUAL O PRODUTO QUE VOCE DESEJA VER AS VENDAS ?  ");
     printf("\n1 - FARINHA");
@@ -212,12 +214,16 @@ void exibe_dados_produto(FILE *arq1){
     scanf("%i",&produto_exibir);
 
     if(produto_exibir>0 || produto_exibir<11){
+
+        //printf("\nTOTAL DE VENDAS POR PRODUTO (EM UNIDADE)\n");
         printf("\n%s %i UNIDADES",nome_produto[produto_exibir-1],total_venda_produto_unidade[produto_exibir-1]);
+        //printf("\nTOTAL DE VENDAS POR PRODUTO (EM REAIS)\n");
         printf("\n%s %.2f REAIS",nome_produto[produto_exibir-1],total_venda_produto_valor[produto_exibir-1]);
 
     }
     if(produto_exibir==11){
         //UNIDADE
+        printf("\nTOTAL DE VENDAS POR PRODUTO (EM UNIDADE)\n");
         printf("\nTOTAL DE VENDAS POR PRODUTO (EM UNIDADE)\n");
         for(i = 0; i<10; i++){
             printf("\n%s %i",nome_produto[i],total_venda_produto_unidade[i]);
@@ -227,13 +233,30 @@ void exibe_dados_produto(FILE *arq1){
         printf("\nTOTAL DE VENDAS POR PRODUTO (EM REAIS)\n");
         for(i = 0; i<10; i++){
             printf("\n%s %.2f",nome_produto[i],total_venda_produto_valor[i]);
-            fprintf(arq1,"\n%s %.2f",nome_produto[i],total_venda_produto_valor[i]);
         }
     }
 }
 void exibe_produto_semana(FILE *arq1){
     printf("\nTOTAL DAS VENDAS (EM UNIDADE): %i",total_venda_de_todos_unidade);
     printf("\nTOTAL DAS VENDAS (EM UNIDADE): %.2f",total_venda_de_todos_valor);
+}
+
+void calcular_mais_vendido(){
+    //MAIS VENDIDO UNIDADE
+    maior_quantidade_produto=total_venda_produto_unidade[0];
+    for(i = 10; i<10; i++){
+        if(total_venda_produto_unidade[i]>maior_quantidade_produto){
+            printf("%i",total_venda_produto_unidade[i]);
+            maior_quantidade_produto=total_venda_produto_unidade[i];
+        }
+    }
+    //CONCATENANDO NA STRING
+    for(i = 10; i<10; i++){
+        if(total_venda_produto_unidade[i]==maior_quantidade_produto){
+            strcat(produtos_mais_vendidos, nome_produto[i]);
+        }
+    }
+
 
 }
 
@@ -280,24 +303,29 @@ void gera_relatorio(FILE *arq1){
     fprintf(arq1,"\n\nTOTAL DAS VENDAS (EM UNIDADE): %i",total_venda_de_todos_unidade);
     fprintf(arq1,"\nTOTAL DAS VENDAS (EM REAIS): %.2f",total_venda_de_todos_valor);
 
-
+    calcular_mais_vendido();
+    fprintf(arq1,"\n%s %i",produtos_mais_vendidos,maior_quantidade_produto);
 }
 
+
+
 void exibe_vendas(FILE *arq1){
-    printf("                  DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
-    for( produto = 0; produto < 10 ; produto++){
-        printf("     \n %s", nome_produto[produto]);
-        for( dia = 0; dia < 7 ; dia++){
-            printf("  %i  ",produto_dia[produto][dia]);
-        }
-    }
+    dia_semana(arq1);
+for( produto = 0; produto < 10 ; produto++){
+printf("     \n %s", nome_produto[produto]);
+fprintf(arq1,"     \n %s", nome_produto[produto]);
+for( dia = 0; dia < 7 ; dia++){
+   	printf("  %i  ",produto_dia[produto][dia]);
+   	fprintf(arq1,"  %i  ",produto_dia[produto][dia]);
+}
+}
 }
 
 void exibe_preco(void){
-    printf("\n\n");
-    for(j=0; j<10; j++){
-       printf("\n%s  %.2f", nome_produto[j],preco_produto[j]);
-    }
+printf("\n\n");
+for(j=0; j<10; j++){
+   printf("\n%s  %.2f", nome_produto[j],preco_produto[j]);
+}
 
 }
 
@@ -320,31 +348,31 @@ i = 1;
 
 
 while (!feof(arq)){
-  // LÊ UMA LINHA (INCLUSIVE COM O '\N')
+ 	// LÊ UMA LINHA (INCLUSIVE COM O '\N')
    // O 'FGETS' LÊ ATÉ 99 CARACTÉRES OU ATÉ O '\N']
 
-  if (result){  // SE FOI POSSÍVEL LER
-  result = fgets(Linha, 100, arq);
-      //printf("Linha %d : %s",i,Linha);
-      //result = fprintf(arq1,"Linha %d\n",i);
-      produto_dia[produto][dia] = atoi(Linha); //Str pra Int
+ 	if (result){  // SE FOI POSSÍVEL LER
+ 	result = fgets(Linha, 100, arq);
+     	//printf("Linha %d : %s",i,Linha);
+     	//result = fprintf(arq1,"Linha %d\n",i);
+     	produto_dia[produto][dia] = atoi(Linha); //Str pra Int
 
-      i++;
-      dia++;
+     	i++;
+     	dia++;
 
-      if(dia>6){
-        dia=0;
-        produto++;
-      }
-      if(i>70){
-      fscanf(arq,"%s",&Linha);
-        preco_produto[linha_preco]=atof(Linha); //Str pra Float
-        linha_preco++;
-      }
+     	if(dia>6){
+       	dia=0;
+       	produto++;
+     	}
+     	if(i>70){
+     	fscanf(arq,"%s",&Linha);
+       	preco_produto[linha_preco]=atof(Linha); //Str pra Float
+       	linha_preco++;
+     	}
    }
 }
 
-    while(entrada_menu!=7){
+    while(entrada_menu!=6){
         menu(arq1);
 
     }
