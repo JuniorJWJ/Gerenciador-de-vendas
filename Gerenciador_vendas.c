@@ -11,7 +11,7 @@ int escolha_produto, altera_opcao, dia_alterar, dia_exibir,produto_exibir,maior_
 float preco_produto[10], soma_produto_valor[10], total_venda_produto_valor[10], total_venda_de_todos_valor;
 float maior_quantidade_produto_valor,menor_quantidade_produto_valor;
 char produtos_mais_vendidos[100], produtos_mais_vendidos_valor[100];
-char nome_produto[10][20]={"FARINHA       : ",
+char nome_produto[10][20]={"FARINHA       : ",  //vetor de strings para armazenar os nomes dos produtos e apresentar na tabela
                            "ARROZ         : ",
                            "FEIJÃO        : ",
                            "FRANGO        : ",
@@ -22,7 +22,7 @@ char nome_produto[10][20]={"FARINHA       : ",
                            "SHAMPOO       : ",
                            "CONDICIONADOR : "
                           };
-char nome_produto1[10][20]={"FARINHA ",
+char nome_produto1[10][20]={"FARINHA ", //vetor de strings para armazenar os nomes dos produtos e apresentar o mais vendido 
                            "ARROZ ",
                            "FEIJÃO ",
                            "FRANGO ",
@@ -31,28 +31,25 @@ char nome_produto1[10][20]={"FARINHA ",
                            "ESCOVA ",
                            "PASTA ",
                            "SHAMPOO ",
-                           "CONDICIONADOR : "
+                           "CONDICIONADOR "
                           };
-char matriz_dia_semana[8][20] = {"DOMINGO",
+char matriz_dia_semana[8][20] = {"DOMINGO", //vetor de strings para armazenar os nomes dos dias da semana 
                           "SEGUNDA",
                           "TERÇA",
                           "QUARTA",
                           "QUINTA",
                           "SEXTA",
                           "SABADO"
-                          };
+                          };	
 int i,j = 0, produto = 0, dia = 0, linha_preco =0;
 
 
 //FUNÇÕES
-void dia_semana(FILE *arq1){
-
-printf("                  DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
-fprintf(arq1,"                  DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
-
+void dia_semana(FILE *arq1){ //função para exibir os dias da semana de forma ordenada na tabela
+	printf("                  DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
 }
 
-void menu(FILE *arq1){
+void menu(FILE *arq1){ //função para exibir o menu onde o usuário escolhe o que fazer
 
     printf("\n\nESCOLHA UMA OPÇÃO :");
     printf("\n1 - EXIBIR A TABELA DE VENDAS");
@@ -93,7 +90,7 @@ void menu(FILE *arq1){
 
 }
 
-void corrije_dado(){
+void corrije_dado(){ //função para corrigir os dados do produto
 
     system("cls");
     printf("QUAL PRODUTO VOCÊ DESEJA MODIFICAR? ");
@@ -139,7 +136,7 @@ void corrije_dado(){
 
 }
 
-void exibe_dados_dia(FILE *arq1){
+void exibe_dados_dia(FILE *arq1){  //função para exibir os dados dos dias
     calculo_exibe_dados_dia();
 
     printf("\nQUAL O DIA QUE VOCE DESEJA VER AS VENDAS ?  ");
@@ -175,7 +172,7 @@ void exibe_dados_dia(FILE *arq1){
     }
 }
 
-void calculo_exibe_dados_produto(){
+void calculo_exibe_dados_produto(){ //função para calcular os dados dos produtos
     //UNIDADE
     for(i = 0; i<10; i++){
         for(j = 0; j<7; j++){
@@ -190,7 +187,7 @@ void calculo_exibe_dados_produto(){
     }
 }
 
-void calculo_exibe_dados_dia(){
+void calculo_exibe_dados_dia(){ //função para calcular os dados dos dias
     //UNIDADE
     for(i = 0; i<7; i++){
             for(j=0; j<10; j++){
@@ -206,7 +203,7 @@ void calculo_exibe_dados_dia(){
     }
 }
 
-void exibe_dados_produto(FILE *arq1){
+void exibe_dados_produto(FILE *arq1){ //função para exibir os dados dos produtos
     calculo_exibe_dados_produto();
 
 
@@ -249,12 +246,12 @@ void exibe_dados_produto(FILE *arq1){
     }
 }
 
-void exibe_produto_semana(FILE *arq1){
+void exibe_produto_semana(FILE *arq1){ //exibe o somatório de vendas em unidade e valor dos produtos na semana
     printf("\nTOTAL DAS VENDAS (EM UNIDADE): %i",total_venda_de_todos_unidade);
-    printf("\nTOTAL DAS VENDAS (EM UNIDADE): %.2f",total_venda_de_todos_valor);
+    printf("\nTOTAL DAS VENDAS (EM VALOR): %.2f",total_venda_de_todos_valor);
 }
 
-void calcular_mais_vendido(){
+void calcular_mais_vendido(){ //função para calcular o produto mais vendido
     //MAIS VENDIDO UNIDADE
     maior_quantidade_produto_unidade=total_venda_produto_unidade[0];
     for(i = 0; i<10; i++){
@@ -273,7 +270,7 @@ void calcular_mais_vendido(){
 
 }
 
-void calcular_menor_vendido(){
+void calcular_menor_vendido(){ //função para calcular o produto menos vendido
     //MAIS VENDIDO UNIDADE
     menor_quantidade_produto_unidade=total_venda_produto_unidade[0];
     for(i = 0; i<10; i++){
@@ -292,7 +289,7 @@ void calcular_menor_vendido(){
 
 }
 
-void exibe_comparacao_maior_unidade(FILE *arq1){
+void exibe_comparacao_maior_unidade(FILE *arq1){ //função para exibir os produtos mais vendidos
     //MAIOR UNIDADE
     for(i = 0; i<10; i++){
         if(total_venda_produto_unidade[i]==maior_quantidade_produto_unidade){
@@ -303,7 +300,7 @@ void exibe_comparacao_maior_unidade(FILE *arq1){
 
 }
 
-void exibe_comparacao_maior_valor(FILE *arq1){
+void exibe_comparacao_maior_valor(FILE *arq1){ //função para exibir os produtos mais rentáveis
     //MAIOR VALOR
     for(i = 0; i<10; i++){
         if(total_venda_produto_valor[i]==maior_quantidade_produto_valor){
@@ -313,7 +310,7 @@ void exibe_comparacao_maior_valor(FILE *arq1){
     }
 }
 
-void exibe_comparacao_menor_unidade(FILE *arq1){
+void exibe_comparacao_menor_unidade(FILE *arq1){ //função para exibir os produtos menos vendidos
     //MAIOR UNIDADE
     for(i = 0; i<10; i++){
         if(total_venda_produto_unidade[i]==menor_quantidade_produto_unidade){
@@ -325,7 +322,7 @@ void exibe_comparacao_menor_unidade(FILE *arq1){
 
 }
 
-void exibe_comparacao_menor_valor(FILE *arq1){
+void exibe_comparacao_menor_valor(FILE *arq1){ //função para exibir os produtos menos rentáveis
     //MAIOR VALOR
     for(i = 0; i<10; i++){
         if(total_venda_produto_valor[i]==menor_quantidade_produto_valor){
@@ -335,7 +332,7 @@ void exibe_comparacao_menor_valor(FILE *arq1){
     }
 }
 
-void gera_relatorio(FILE *arq1){
+void gera_relatorio(FILE *arq1){  //função para gerar o relatório
     printf("....RELATÓRIO CRIADO");
     fprintf(arq1,"TABELA DE VENDAS\n");
     fprintf(arq1,"                  DOM  SEG  TER  QUA  QUI  SEX  SAB\n");
@@ -393,7 +390,7 @@ void gera_relatorio(FILE *arq1){
 
 
 
-void exibe_vendas(FILE *arq1){
+void exibe_vendas(FILE *arq1){ //função para exibir os dados de venda da semana
     dia_semana(arq1);
     for( produto = 0; produto < 10 ; produto++){
         printf("     \n %s", nome_produto[produto]);
@@ -403,7 +400,7 @@ void exibe_vendas(FILE *arq1){
     }
 }
 
-void exibe_preco(void){
+void exibe_preco(void){ //função para exibir o preço de cada produto
 printf("\n\n");
 for(j=0; j<10; j++){
    printf("\n%s  %.2f", nome_produto[j],preco_produto[j]);
@@ -411,48 +408,45 @@ for(j=0; j<10; j++){
 
 }
 
-int main(){
-
+int main(){ //função principal
     setlocale(LC_ALL, "Portuguese");
-FILE *arq, *arq1;
-char Linha[100];
-char *result;
-arq = fopen("Entrada.txt", "rt");             // LEITURA
-arq1 = fopen("Relatorio (saida).txt", "wt");  // GRAVAÇÃO
+	FILE *arq, *arq1;
+	char Linha[100];
+	char *result;
+	arq = fopen("Entrada.txt", "rt");             // LEITURA
+	arq1 = fopen("Relatorio (saida).txt", "wt");  // GRAVAÇÃO
 
-if (arq == NULL){
-        // ERRO NA ABERTURA
-   printf("Problemas na abertura do arquivo\n");
-   return;
-}
-
-i = 1;
-
-
-while (!feof(arq)){
- 	// LÊ UMA LINHA (INCLUSIVE COM O '\N')
-   // O 'FGETS' LÊ ATÉ 99 CARACTÉRES OU ATÉ O '\N']
-
- 	if (result){  // SE FOI POSSÍVEL LER
- 	result = fgets(Linha, 100, arq);
-     	//printf("Linha %d : %s",i,Linha);
-     	//result = fprintf(arq1,"Linha %d\n",i);
-     	produto_dia[produto][dia] = atoi(Linha); //Str pra Int
-
-     	i++;
-     	dia++;
-
-     	if(dia>6){
-       	dia=0;
-       	produto++;
-     	}
-     	if(i>70){
-     	fscanf(arq,"%s",&Linha);
-       	preco_produto[linha_preco]=atof(Linha); //Str pra Float
-       	linha_preco++;
-     	}
-   }
-}
+	if (arq == NULL){
+	        // ERRO NA ABERTURA
+	   printf("Problemas na abertura do arquivo\n");
+	   return;
+	}
+	
+	i = 1;
+	
+	
+	while (!feof(arq)){
+	 	// LÊ UMA LINHA (INCLUSIVE COM O '\N')
+	   // O 'FGETS' LÊ ATÉ 99 CARACTÉRES OU ATÉ O '\N']
+	
+	 	if (result){  // SE FOI POSSÍVEL LER VAI EXECUTAR
+	 		result = fgets(Linha, 100, arq);
+	     	produto_dia[produto][dia] = atoi(Linha); //Str pra Int
+	
+	     	i++;
+	     	dia++;
+	
+	     	if(dia>6){
+	       	dia=0;
+	       	produto++;
+	     	}
+	     	if(i>70){
+	     	fscanf(arq,"%s",&Linha);
+	       	preco_produto[linha_preco]=atof(Linha); //Str pra Float
+	       	linha_preco++;
+	     	}
+	   }
+	}
 
     while(entrada_menu!=6){
         menu(arq1);
